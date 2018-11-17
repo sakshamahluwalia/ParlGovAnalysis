@@ -26,5 +26,5 @@ create view part1 as
 	where extract(year from election.e_date) >= 1996 and extract(year from election.e_date) <= 2016
 
 -- the answer to the query 
-insert into q1 
+insert into q1(select * from part1) 
 
