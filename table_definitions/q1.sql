@@ -24,11 +24,10 @@ DROP VIEW IF EXISTS answer CASCADE;
 
 -- Define views for your intermediate steps here.
 
--- table containing partyid, votes earned by a party, total votes, countryid and date
 create view part1 as 
-	select e.e_date, e.country_id, e.votes_valid, er.party_id, er.votes 	
-	from election e join election_result er on e.id = er.id 	
-	where extract(year from e.e_date) >= 1996 and extract(year from e.e_date) <= 2016;
+	select e_date, e.country_id, votes_valid, party_id, votes 	
+	from election e join country on e.country_id = country.id join election_result on e.id = election_id join party on party_id = party.id	
+	where extract(year from e.e_date) >= '1996' and extract(year from e.e_date) <= '2016';
 
 create view part2a as 
 	select extract(year from e_date) as year, country_id, sum(votes_valid) as tvotes	
@@ -36,7 +35,7 @@ create view part2a as
 	group by extract(year from e_date), country_id;
 
 create view part2b as 
-	select extract(year from p1.e_date) as year, p1.country_id, party_id, (cast(votes as decimal(10, 2))/cast(p2a.tvotes as decimal(10, 2)))*100 as percentage 
+	select extract(year from p1.e_date) as year, p1.country_id, p1.party_id, (votes * 1.0 / p2a.tvotes * 1.0) * 100.0 as percentage 
 	from part1 p1 join part2a p2a on extract(year from p1.e_date) = p2a.year and p1.country_id = p2a.country_id;
 
 create view ranges as 
