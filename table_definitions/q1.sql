@@ -25,21 +25,17 @@ DROP VIEW IF EXISTS answer CASCADE;
 -- Define views for your intermediate steps here.
 
 create view part1 as 
-	select e_date, e.country_id, votes_valid, party_id, votes 	
+	select e_date, e.country_id, party_id, (election_result.votes * 1.0/votes_valid * 1.0) * 100.0 as vote_percentage 	
 	from election e join country on e.country_id = country.id join election_result on e.id = election_id join party on party_id = party.id	
 	where extract(year from e.e_date) >= '1996' and extract(year from e.e_date) <= '2016';
 
 create view part2a as 
-	select extract(year from e_date) as year, country_id, sum(votes_valid) as tvotes	
+	select extract(year from e_date) as year, country_id, avg(tvotes) as tvotes	
 	from part1 		
-	group by extract(year from e_date), country_id;
-
-create view part2b as 
-	select extract(year from p1.e_date) as year, p1.country_id, p1.party_id, (votes * 1.0 / p2a.tvotes * 1.0) * 100.0 as percentage 
-	from part1 p1 join part2a p2a on extract(year from p1.e_date) = p2a.year and p1.country_id = p2a.country_id;
+	group by extract(year from e_date), country_id, party_id;
 
 create view ranges as 
-	select p2b.year as year, p2b.country_id, p.name_short as partyName, 
+	select p2a.year as year, p2a.country_id, p.name_short as partyName, 
 		case 
 			when 0 < percentage and percentage <= 5 then '(0-5]' 
 			when 5 < percentage and percentage <= 10 then '(5-10]'	 
@@ -49,7 +45,7 @@ create view ranges as
 			when 40 < percentage and percentage <= 100 then '(40-100]' 
 		end 
 		as voteRange	
-	from part2b p2b join party p on p2b.party_id = p.id;
+	from part2a p2a join party p on p2a.party_id = p.id;
 
 create view answer as 
 	select r.year, c.name as countryName, voteRange, r.partyName 
