@@ -24,10 +24,7 @@ create view part1 as
 	from election join election_result
 			on election.id = election_result.id
 	where extract(year from election.e_date) >= 1996 and extract(year from election.e_date) <= 2016
--- query works till here.
-
-
 
 -- the answer to the query 
-insert into q1 
+insert into q1(select * from part1) 
 
