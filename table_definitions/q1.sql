@@ -30,7 +30,7 @@ create view part1 as
 	where extract(year from e.e_date) >= '1996' and extract(year from e.e_date) <= '2016';
 
 create view part2a as 
-	select extract(year from e_date) as year, country_id, avg(vote_percentage) as percentage	
+	select extract(year from e_date) as year, country_id, party_id, avg(vote_percentage) as percentage	
 	from part1 		
 	group by extract(year from e_date), country_id, party_id;
 
