@@ -24,10 +24,10 @@ create view party_info as
 	from party p join country c on p.country_id = c.id join party_position pp on p.id = pp.party_id;
 
 create view nullvalues as
-	select name, count(left_right) as "r0_2", count(left_right) as "r2_4", count(left_right) as "r4_6", count(left_right) as "r6_8", count(left_right) as "r8_10"
-	from party_info
-	where left_right is null
-	group by name;
+	select c.name, count(left_right) as "r0_2", count(left_right) as "r2_4", count(left_right) as "r4_6", count(left_right) as "r6_8", count(left_right) as "r8_10"
+	from party p join party_position pp on p.id = pp.party_id join country c on c.id = p.country_id
+	where pp.left_right is null
+	group by c.name;
 
 -- Define views for your intermediate steps here.
 create view zeroTwo as
@@ -66,9 +66,17 @@ create view intermediate_step as
 
 
 create view final as
+	select name from nullvalues except
+	select name from intermediate_step;
+
+create view prepforunion as
+	select name, 0 as "r0_2", 0 as "r2_4", 0 as "r4_6", 0 as "r6_8", 0 as "r8_10"
+	from final;
+
+create view answer as
 	select * from intermediate_step union
-	select * from nullvalues;
+	select * from prepforunion;
 
 -- the answer to the query 
-INSERT INTO q4 
+INSERT INTO q4(select * from answer)
 
