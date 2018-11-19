@@ -108,7 +108,7 @@ public abstract class JDBCSubmission {
      * Does so by finding politicians that have similar comments and descriptions (combined)
      * using Jaccard similarity and a threshold.
      *
-     * @param  politicianId   id of the politician
+     * @param  politicianId     id of the politician
      * @param  threshold        Jaccard similarity threshold
      * @return                  a list of politicians with Jaccard similarity of
      *                          comments and descriptions above the given threshold

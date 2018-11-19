@@ -33,11 +33,11 @@ public class Assignment2 extends JDBCSubmission {
         if (connection != null) {
             try {
                 connection.close();
-                return true;
             } catch (SQLException e) {
                 return false;
             }
         }
+        return true;
     }
 
     @Override
@@ -48,8 +48,45 @@ public class Assignment2 extends JDBCSubmission {
 
     @Override
     public List<Integer> findSimilarPoliticians(Integer politicianName, Float threshold) {
-        // Implement this method!
-        return null;
+
+	List<Integer> finalanswer = new ArrayList<>();
+
+        try {
+
+		String queryString1 = "SELECT description FROM politician_president WHERE id = ?;";
+		String queryString2 = "SELECT id, description FROM politician_president;";
+
+
+		PreparedStatement query1 = connection.prepareStatement(queryString1);
+		PreparedStatement query2 = connection.prepareStatement(queryString2);
+
+		query1.setInt(1, politicianName);
+		ResultSet answer = query1.executeQuery();
+
+		// get the description of the politician.
+		String description = "";
+		while (answer.next()) {
+		    description = answer.getString("description");
+		}
+
+		ResultSet answer2 = query2.executeQuery();
+
+		while(query2.next()) {
+			double similarity = similarity(answer2.getString("description", description);
+			int id;
+			if (similarity >= threshold)	 {
+				id = query2.getInt("id");
+				if (id != politicianName) {
+					finalanswer.add(id);
+				}
+			}
+		}
+
+
+        } catch (SQLException se) {
+            System.out.print(se.getMessage());
+        }
+        return finalanswer;
     }
 
     public static void main(String[] args) {
