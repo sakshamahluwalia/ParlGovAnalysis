@@ -17,7 +17,7 @@ CREATE TABLE q4(
 
 -- You may find it convenient to do this for each of the views
 -- that define your intermediate steps.  (But give them better names!)
-DROP VIEW IF EXISTS party_info CASCADE;
+DROP VIEW IF EXISTS party_info, nullvalues, intermediate_step CASCADE;
 
 create view party_info as 
 	select p.id, c.name, pp.left_right
@@ -63,7 +63,6 @@ create view eightTen as
 create view intermediate_step as 
 	select zt.name, "r0_2", "r2_4", "r4_6", "r6_8", "r8_10"
 	from zeroTwo zt join twoFour tf on zt.name = tf.name join fourSix fs on fs.name = zt.name join sixEight se on se.name = zt.name join eightTen et on et.name = zt.name;
-
 
 create view final as
 	select name from nullvalues except
