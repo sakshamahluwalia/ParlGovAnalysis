@@ -17,10 +17,28 @@ mostRecentlyWonElectionYear INT
 
 -- You may find it convenient to do this for each of the views
 -- that define your intermediate steps.  (But give them better names!)
-DROP VIEW IF EXISTS intermediate_step CASCADE;
+DROP VIEW IF EXISTS numElectionInACountry, numPartiesInACountry, average CASCADE;
 
 -- Define views for your intermediate steps here.
+create view numElectionInACountry as 
+	select c.id, count(*) as numelections
+	from election e join country c on e.country_id = c.id 
+	group by c.id;
 
+create view numPartiesInACountry as 
+	select c.id, count(*) as numparties
+	from party p join country c on p.country_id = c.id 
+	group by c.id;
+
+create view average as
+	select numParties.id, (numElections.numelections * 1.0) / (numParties.numparties * 1.0) as average
+	from numPartiesInACountry numParties join numElectionInACountry numElections on numParties.id = numElections.id;
+
+create view threeOrMore as
+	select a.country_id as country_id, er.party_id as party_id, count(*) as numwins, a.average
+	from election e join election_result er on e.id = er.election_id join average a on e.country_id = a.country_id
+	group by er.party_id, a.country_id, a.average
+	having count(*) > 3.0 * a.average;
 
 -- the answer to the query 
 insert into q2 
