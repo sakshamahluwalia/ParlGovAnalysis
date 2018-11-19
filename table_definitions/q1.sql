@@ -16,12 +16,7 @@ partyName VARCHAR(100)
 -- You may find it convenient to do this for each of the views
 -- that define your intermediate steps.  (But give them better names!)
 DROP VIEW IF EXISTS votes_validNull, votes_validNotNullCalculated, votes_validNotNullFromStart, votes_validFinal CASCADE;
-DROP VIEW IF EXISTS VoteForParty CASCADE;
-DROP VIEW IF EXISTS part1 CASCADE;
-DROP VIEW IF EXISTS part2a CASCADE;
-DROP VIEW IF EXISTS part2b CASCADE;
-DROP VIEW IF EXISTS ranges CASCADE;
-DROP VIEW IF EXISTS answer CASCADE;
+DROP VIEW IF EXISTS VoteForParty, part1, part2a, ranges, answer CASCADE;
 
 -- get the electionId, country_id and the date where votes_valid is not given from election.
 create view votes_validNull as
