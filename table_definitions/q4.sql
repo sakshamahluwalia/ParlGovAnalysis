@@ -17,7 +17,7 @@ CREATE TABLE q4(
 
 -- You may find it convenient to do this for each of the views
 -- that define your intermediate steps.  (But give them better names!)
-DROP VIEW IF EXISTS party_info CASCADE;
+DROP VIEW IF EXISTS party_info, nullvalues, intermediate_step CASCADE;
 
 create view party_info as 
 	select p.id, c.name, pp.left_right
