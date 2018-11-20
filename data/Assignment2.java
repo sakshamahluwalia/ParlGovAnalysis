@@ -31,9 +31,9 @@ public class Assignment2 extends JDBCSubmission {
     @Override
     public boolean disconnectDB() {
         // Implement this method!
-        if (connection != null) {
+        if (this.connection != null) {
             try {
-                connection.close();
+                this.connection.close();
             } catch (SQLException e) {
                 return false;
             }
@@ -57,7 +57,7 @@ public class Assignment2 extends JDBCSubmission {
                                     "ORDER BY e.e_date DESC;";
 
             // prepare and execute the query.
-            PreparedStatement query1  = connection.prepareStatement(queryString1);
+            PreparedStatement query1  = this.connection.prepareStatement(queryString1);
 
             query1.setString(1, countryName);
             ResultSet answer = query1.executeQuery();
@@ -89,8 +89,8 @@ public class Assignment2 extends JDBCSubmission {
     		String queryString2 = "SELECT id, description FROM politician_president WHERE id <> ?;";
 
             // prepare the queries but only execute the first query first..
-    		PreparedStatement query1 = connection.prepareStatement(queryString1);
-    		PreparedStatement query2 = connection.prepareStatement(queryString2);
+    		PreparedStatement query1 = this.connection.prepareStatement(queryString1);
+    		PreparedStatement query2 = this.connection.prepareStatement(queryString2);
 
     		query1.setInt(1, politicianName);
             query2.setInt(1, politicianName);
@@ -113,8 +113,8 @@ public class Assignment2 extends JDBCSubmission {
     			double similarity = similarity(answer2.getString("description"), description);
     			// int id;
 
-                // if the similarity value > threshold that was given then add the politician's id to 
-                // finalanswer
+                // if the similarity value > threshold that was given then add the politician's id to
+                // 'finalanswer'
     			if (similarity >= threshold)	 {
     				// id = query2.getInt("id");
     				// if (id != politicianName) {
@@ -132,16 +132,31 @@ public class Assignment2 extends JDBCSubmission {
     }
 
     public static void main(String[] args) {
-        // You can put testing code in here. It will not affect our autotester.
+//         You can put testing code in here. It will not affect our autotester.
         System.out.println("Hello");
 
         try {
             Assignment2 test = new Assignment2();
 
-            test.connectDB(
+            Boolean bool_ = test.connectDB(
                     "jdbc:postgresql://localhost:5432/csc343h-ahluwa41",
                     "ahluwa41", "");
 
+            if (bool_) {
+                System.out.println("test1");
+                ElectionCabinetResult ec1 = test.electionSequence("Canada");
+                for(int i = 0; i < ec1.elections.size(); i++) {
+                    System.out.println("election " + ec1.elections.get(i) + " cabinet " + ec1.cabinets.get(i));
+                }
+
+                List<Integer> sp = test.findSimilarPoliticians(9, (float)0.0);
+                System.out.println("test2");
+                for (int i : sp) {
+                    System.out.println(i);
+                }
+
+                test.disconnectDB();
+            }
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
