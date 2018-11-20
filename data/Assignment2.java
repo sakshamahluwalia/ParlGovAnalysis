@@ -43,7 +43,37 @@ public class Assignment2 extends JDBCSubmission {
     @Override
     public ElectionCabinetResult electionSequence(String countryName) {
         // Implement this method!
-        return null;
+        public List<Integer> elections;
+        public List<Integer> cabinets;
+
+        try {
+
+            // create the query.
+            String queryString1 =   "SELECT e.id as election_id, c.id as cabinet_id"      +
+                                    "FROM election e, cabinet c, country co"              +
+                                    "WHERE e.id = c.election_id and e.country_id = co.id" +
+                                    "AND co.name = ?"
+                                    "ORDER BY e.e_date DESC;";
+
+            // prepare and execute the query.
+            PreparedStatement query1  = connection.prepareStatement(queryString1);
+
+            query1.setString(1, countryName);
+            ResultSet answer = query1.executeQuery();
+
+            // iterate through teh result and each row to, 'elections' and 'cabinets'.
+            while (answer.next()) {
+                elections.add(answer.getInt("election_id"));
+                cabinets.add(answer.getInt("cabinet_id"));
+            }
+
+
+        } catch (SQLException se) {
+            System.out.println(se.getMessage());
+        }
+
+
+        return new ElectionCabinetResult(elections, cabinets);
     }
 
     @Override
@@ -53,39 +83,50 @@ public class Assignment2 extends JDBCSubmission {
 
         try {
 
-		String queryString1 = "SELECT description FROM politician_president WHERE id = ?;";
-		String queryString2 = "SELECT id, description FROM politician_president;";
+            // create the queries.
+    		String queryString1 = "SELECT description FROM politician_president WHERE id = ?;";
+    		String queryString2 = "SELECT id, description FROM politician_president WHERE id <> ?;";
 
+            // prepare the queries but only execute the first query first..
+    		PreparedStatement query1 = connection.prepareStatement(queryString1);
+    		PreparedStatement query2 = connection.prepareStatement(queryString2);
 
-		PreparedStatement query1 = connection.prepareStatement(queryString1);
-		PreparedStatement query2 = connection.prepareStatement(queryString2);
+    		query1.setInt(1, politicianName);
+            query2.setInt(1, politicianName);
 
-		query1.setInt(1, politicianName);
-		ResultSet answer = query1.executeQuery();
+    		ResultSet answer = query1.executeQuery();
 
-		// get the description of the politician.
-		String description = "";
-		while (answer.next()) {
-		    description = answer.getString("description");
-		}
+    		// get the description of the politician.
+    		String description = "";
+    		while (answer.next()) {
+    		    description = answer.getString("description");
+    		}
 
-		ResultSet answer2 = query2.executeQuery();
+            //execute the second query.
+    		ResultSet answer2 = query2.executeQuery();
 
-		while(query2.next()) {
-			double similarity = similarity(answer2.getString("description", description);
-			int id;
-			if (similarity >= threshold)	 {
-				id = query2.getInt("id");
-				if (id != politicianName) {
-					finalanswer.add(id);
-				}
-			}
-		}
+            // iterate through all the politicians.
+    		while(query2.next()) {
+
+                // get the similarity value.
+    			double similarity = similarity(answer2.getString("description", description);
+    			// int id;
+
+                // if the similarity value > threshold that was given then add the politician's id to 
+                // finalanswer
+    			if (similarity >= threshold)	 {
+    				// id = query2.getInt("id");
+    				// if (id != politicianName) {
+    					finalanswer.add(query2.getInt("id"));
+    				// }
+    			}
+    		}
 
 
         } catch (SQLException se) {
             System.out.print(se.getMessage());
         }
+
         return finalanswer;
     }
 
