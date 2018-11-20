@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 // If you are looking for Java data structures, these are highly useful.
@@ -11,6 +12,8 @@ import java.util.List;
 //import java.util.HashSet;
 public class Assignment2 extends JDBCSubmission {
 
+    private Connection connection;
+
     public Assignment2() throws ClassNotFoundException {
 
         Class.forName("org.postgresql.Driver");
@@ -21,10 +24,10 @@ public class Assignment2 extends JDBCSubmission {
         // Implement this method!
         try {
             connection = DriverManager.getConnection(url, username, password);
-            return true;
         } catch (SQLException e) {
             return false;
         }
+        return true;
     }
 
     @Override
@@ -43,8 +46,8 @@ public class Assignment2 extends JDBCSubmission {
     @Override
     public ElectionCabinetResult electionSequence(String countryName) {
         // Implement this method!
-        public List<Integer> elections;
-        public List<Integer> cabinets;
+        List<Integer> elections = new ArrayList<>();
+        List<Integer> cabinets  = new ArrayList<>();
 
         try {
 
@@ -52,7 +55,7 @@ public class Assignment2 extends JDBCSubmission {
             String queryString1 =   "SELECT e.id as election_id, c.id as cabinet_id"      +
                                     "FROM election e, cabinet c, country co"              +
                                     "WHERE e.id = c.election_id and e.country_id = co.id" +
-                                    "AND co.name = ?"
+                                    "AND co.name = ?"                                     +
                                     "ORDER BY e.e_date DESC;";
 
             // prepare and execute the query.
@@ -106,10 +109,10 @@ public class Assignment2 extends JDBCSubmission {
     		ResultSet answer2 = query2.executeQuery();
 
             // iterate through all the politicians.
-    		while(query2.next()) {
+    		while(answer2.next()) {
 
                 // get the similarity value.
-    			double similarity = similarity(answer2.getString("description", description);
+    			double similarity = similarity(answer2.getString("description"), description);
     			// int id;
 
                 // if the similarity value > threshold that was given then add the politician's id to 
@@ -117,7 +120,7 @@ public class Assignment2 extends JDBCSubmission {
     			if (similarity >= threshold)	 {
     				// id = query2.getInt("id");
     				// if (id != politicianName) {
-    					finalanswer.add(query2.getInt("id"));
+    					finalanswer.add(answer2.getInt("id"));
     				// }
     			}
     		}
@@ -133,6 +136,19 @@ public class Assignment2 extends JDBCSubmission {
     public static void main(String[] args) {
         // You can put testing code in here. It will not affect our autotester.
         System.out.println("Hello");
+
+        try {
+            Assignment2 test = new Assignment2();
+
+            test.connectDB(
+                    "jdbc:postgresql://localhost:5432/csc343h-ahluwa41?currentSchema=parlgov",
+                    "ahluwa41", "");
+
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
