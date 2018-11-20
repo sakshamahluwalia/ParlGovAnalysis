@@ -12,8 +12,6 @@ import java.util.List;
 //import java.util.HashSet;
 public class Assignment2 extends JDBCSubmission {
 
-    private Connection connection;
-
     public Assignment2() throws ClassNotFoundException {
 
         Class.forName("org.postgresql.Driver");
@@ -24,10 +22,10 @@ public class Assignment2 extends JDBCSubmission {
         // Implement this method!
         try {
             connection = DriverManager.getConnection(url, username, password);
+            return true;
         } catch (SQLException e) {
             return false;
         }
-        return true;
     }
 
     @Override
@@ -141,7 +139,7 @@ public class Assignment2 extends JDBCSubmission {
             Assignment2 test = new Assignment2();
 
             test.connectDB(
-                    "jdbc:postgresql://localhost:5432/csc343h-ahluwa41?currentSchema=parlgov",
+                    "jdbc:postgresql://localhost:5432/csc343h-ahluwa41",
                     "ahluwa41", "");
 
 
