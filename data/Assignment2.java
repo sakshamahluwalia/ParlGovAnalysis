@@ -31,9 +31,9 @@ public class Assignment2 extends JDBCSubmission {
     @Override
     public boolean disconnectDB() {
         // Implement this method!
-        if (this.connection != null) {
+        if (connection != null) {
             try {
-                this.connection.close();
+                connection.close();
             } catch (SQLException e) {
                 return false;
             }
@@ -50,14 +50,14 @@ public class Assignment2 extends JDBCSubmission {
         try {
 
             // create the query.
-            String queryString1 =   "SELECT e.id as election_id, c.id as cabinet_id"      +
-                                    "FROM election e, cabinet c, country co"              +
-                                    "WHERE e.id = c.election_id and e.country_id = co.id" +
-                                    "AND co.name = ?"                                     +
+            String queryString1 =   "SELECT e.id as election_id, c.id as cabinet_id "      +
+                                    "FROM election e, cabinet c, country co "              +
+                                    "WHERE e.id = c.election_id and e.country_id = co.id " +
+                                    "AND co.name = ? "                                     +
                                     "ORDER BY e.e_date DESC;";
 
             // prepare and execute the query.
-            PreparedStatement query1  = this.connection.prepareStatement(queryString1);
+            PreparedStatement query1  = connection.prepareStatement(queryString1);
 
             query1.setString(1, countryName);
             ResultSet answer = query1.executeQuery();
@@ -89,8 +89,8 @@ public class Assignment2 extends JDBCSubmission {
     		String queryString2 = "SELECT id, description FROM politician_president WHERE id <> ?;";
 
             // prepare the queries but only execute the first query first..
-    		PreparedStatement query1 = this.connection.prepareStatement(queryString1);
-    		PreparedStatement query2 = this.connection.prepareStatement(queryString2);
+    		PreparedStatement query1 = connection.prepareStatement(queryString1);
+    		PreparedStatement query2 = connection.prepareStatement(queryString2);
 
     		query1.setInt(1, politicianName);
             query2.setInt(1, politicianName);
