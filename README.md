@@ -8,4 +8,6 @@ This was an assignment for csc343 at University of Toronto. Contains SQL queries
 
 ## Authors
 
+* **Martin Baroody** - *Initial work* - [martinbaroody77](https://github.com/martinbaroody77)
+* **Patrick Calleja** - *Initial work* - [CallejaGit](https://github.com/CallejaGit)
 * **Saksham Ahluwalia** - *Initial work* - [sakshamahluwalia](https://github.com/sakshamahluwalia)
