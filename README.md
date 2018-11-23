@@ -4,6 +4,7 @@
 </div>
 
 # ParlGovAnalysis
+This was an assignment for csc343 at University of Toronto. Contains SQL queries for question asked in a2.pdf enclosed.
 
 ## Authors
 
